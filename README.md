@@ -47,7 +47,7 @@ Open-Meteo, NWS (`api.weather.gov`), and AviationWeather.gov need **no keys**.
 ## Known limitations
 
 - Air-primary only; no booking/rebooking or paid flight-status APIs
-- Static city → primary-hub table (not full U.S. airport disambiguation)
+- Hub resolution is heuristic (city/state ranking + nearest airport); not full interactive airport disambiguation
 - Date window: today through +7 days
 - Assesses environmental / NAS-adjacent **conditions**, not carrier cancellation decisions
 - Short in-memory cache (~10 min) per origin|dest|date
