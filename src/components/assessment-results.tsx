@@ -96,7 +96,7 @@ export function AssessmentResults({ data }: AssessmentResultsProps) {
             Confidence {(data.confidence * 100).toFixed(0)}%
             {data.synthesisMode === "rules"
               ? " · Rule-based synthesis (no LLM key)"
-              : " · Claude synthesis"}
+              : " · OpenAI synthesis"}
           </span>
           {data.gaps.length > 0 && (
             <ul className="gaps">
