@@ -5,12 +5,12 @@
 **Input:** origin city, destination city, travel date (today → +7 days)  
 **Output:** overall risk, Ops narrative, prioritized risks with evidence IDs, recommended actions, confidence + gaps.
 
-Air travel is primary. Cities map to a small static table of major U.S. hubs (documented tech debt).
+Air travel is primary. Cities map to a small static table of major U.S. hubs with **typed autocomplete** that filters suggestions and selects the primary hub.
 
 ## Request flow
 
 ```
-Browser form
+Browser form (city autocomplete → hub)
   → POST /api/assess
       → resolve cities → coords + primary ICAO
       → Promise.allSettled([
@@ -19,7 +19,7 @@ Browser form
             AviationWeather METAR/TAF
          ])
       → normalize to Evidence[]
-      → synthesize (Claude if ANTHROPIC_API_KEY else rules)
+      → synthesize (OpenAI if OPENAI_API_KEY else rules)
       → validate cited evidenceIds
       → AssessmentResponse JSON
 ```
@@ -38,7 +38,11 @@ Short in-memory TTL cache (~10 min) per `origin|dest|date`.
 
 ## AI role
 
-Claude synthesizes **only** from the normalized evidence payload. It must not invent numbers, alerts, URLs, or evidence IDs. Server post-validates citations (unknown IDs dropped). Without `ANTHROPIC_API_KEY`, a deterministic rules synthesizer scores evidence thresholds and emits a templated narrative — UI shows **Rule-based synthesis (no LLM key)**.
+OpenAI synthesizes **only** from the normalized evidence payload (default model `gpt-4o-mini`). It must not invent numbers, alerts, URLs, or evidence IDs. Server post-validates citations (unknown IDs dropped). Without `OPENAI_API_KEY`, a deterministic rules synthesizer scores evidence thresholds and emits a templated narrative — UI shows **Rule-based synthesis (no LLM key)**.
+
+## Brand
+
+UI tokens follow public nuKudo site theme: black ground, crimson primary (`#D0011D`), gold accent (`#C1A15C`).
 
 ## Response schema (summary)
 

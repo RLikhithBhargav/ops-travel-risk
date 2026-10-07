@@ -6,14 +6,14 @@ Prototype for assessing U.S. air travel disruption for a **city pair + date**. L
 
 - Node.js 20+ (tested on Node 22)
 - npm 10+
-- Optional: `ANTHROPIC_API_KEY` for Claude synthesis (rules fallback works without it)
+- Optional: `OPENAI_API_KEY` for OpenAI synthesis (rules fallback works without it)
 
 ## Setup
 
 ```bash
 npm install
 cp .env.example .env.local
-# Optionally set ANTHROPIC_API_KEY in .env.local
+# Optionally set OPENAI_API_KEY in .env.local
 npm run dev
 ```
 
@@ -21,27 +21,27 @@ Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 
 ## Example query
 
-- Origin: `Chicago`
-- Destination: `San Francisco`
+- Origin: `Chicago` (autocomplete suggests ORD)
+- Destination: `San Francisco` (autocomplete suggests SFO)
 - Date: today (or any day within the next 7 days)
 
-Cities resolve to primary hub airports (e.g. Chicago → ORD / KORD, San Francisco → SFO / KSFO). IATA codes also work.
+Cities resolve to primary hub airports. Typing filters the hub list; IATA codes also work.
 
 ## Env vars
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | No | Claude synthesis. If absent, UI labels **Rule-based synthesis (no LLM key)**. |
-| `ANTHROPIC_MODEL` | No | Model override (default `claude-sonnet-4-20250514`) |
+| `OPENAI_API_KEY` | No | OpenAI synthesis. If absent, UI labels **Rule-based synthesis (no LLM key)**. |
+| `OPENAI_MODEL` | No | Model override (default `gpt-4o-mini`) |
 
 Open-Meteo, NWS (`api.weather.gov`), and AviationWeather.gov need **no keys**.
 
 ## What it does
 
-1. Resolve cities → primary commercial airports + coordinates
+1. Resolve cities → primary commercial airports + coordinates (with autocomplete)
 2. Fetch in parallel: Open-Meteo daily forecast, NWS active alerts by lat/lon, AviationWeather METAR/TAF
 3. Normalize to `Evidence[]` with source URLs and timestamps
-4. Synthesize (`llm` if key present, else `rules`) with citation validation
+4. Synthesize (`llm` if OpenAI key present, else `rules`) with citation validation
 5. Return overall risk, narrative, risks, actions, confidence, gaps, partial failures
 
 ## Known limitations
