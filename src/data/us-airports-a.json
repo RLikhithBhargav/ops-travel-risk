@@ -1,0 +1,1 @@
+{"source":"OurAirports (davidmegginson/ourairports-data) — US large/medium airports plus scheduled small airports with IATA","rule":"Resolve city to best airport in same municipality+state by rank (large>medium>small, scheduled boost). If no same-city airport, use nearest airport in the filtered set by haversine distance.","count":1005,"part":"a","airports":[]}
