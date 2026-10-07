@@ -1,5 +1,16 @@
 import type { AirportRef } from "@/lib/types";
-import usAirportsData from "@/data/us-airports.json";
+import meta from "@/data/us-airports-meta.json";
+import p00 from "@/data/parts/us-airports-p00.json";
+import p01 from "@/data/parts/us-airports-p01.json";
+import p02 from "@/data/parts/us-airports-p02.json";
+import p03 from "@/data/parts/us-airports-p03.json";
+import p04 from "@/data/parts/us-airports-p04.json";
+import p05 from "@/data/parts/us-airports-p05.json";
+import p06 from "@/data/parts/us-airports-p06.json";
+import p07 from "@/data/parts/us-airports-p07.json";
+import p08 from "@/data/parts/us-airports-p08.json";
+import p09 from "@/data/parts/us-airports-p09.json";
+import p10 from "@/data/parts/us-airports-p10.json";
 
 export type DatasetAirport = {
   iata: string;
@@ -13,11 +24,11 @@ export type DatasetAirport = {
   sched: boolean;
 };
 
-const DATASET = usAirportsData as {
-  source: string;
-  rule: string;
-  count: number;
-  airports: DatasetAirport[];
+const DATASET = {
+  source: (meta as { source: string }).source,
+  rule: (meta as { rule: string }).rule,
+  count: (meta as { count: number }).count,
+  airports: [...p00, ...p01, ...p02, ...p03, ...p04, ...p05, ...p06, ...p07, ...p08, ...p09, ...p10] as DatasetAirport[],
 };
 
 /** Public commercial-ish US airports from OurAirports filter. */
@@ -129,7 +140,6 @@ function nearestAirport(
   let best: DatasetAirport | null = null;
   let bestD = Infinity;
   for (const a of DATASET.airports) {
-    // Prefer scheduled / larger hubs as "nearest commercial"
     const d = haversineKm({ lat, lon }, a) - rankOf(a) * 5;
     if (d < bestD) {
       bestD = d;
@@ -146,7 +156,6 @@ export interface AirportSuggestion {
   icao: string;
   name: string;
   region: string;
-  /** Display value written into the city field on select */
   value: string;
 }
 
@@ -163,9 +172,6 @@ function toSuggestion(a: DatasetAirport): AirportSuggestion {
   };
 }
 
-/**
- * Filterable hub suggestions from the OurAirports-derived US commercial set.
- */
 export function searchAirportSuggestions(
   query: string,
   limit = 8,
@@ -215,12 +221,9 @@ export function searchAirportSuggestions(
     scored.push({ a, score });
   }
 
-  // Deduplicate by city+region keeping best airport, but allow multiple
-  // cities that share a name (Wilmington DE/NC/OH) as separate suggestions.
   const byKey = new Map<string, { a: DatasetAirport; score: number }>();
   for (const row of scored.sort((x, y) => y.score - x.score)) {
     const key = `${row.a.city.toLowerCase()}|${row.a.region}|${row.a.iata}`;
-    // Keep distinct airports for same city name in different states
     const cityKey = `${row.a.city.toLowerCase()}|${row.a.region}`;
     const existingCity = [...byKey.values()].find(
       (v) => `${v.a.city.toLowerCase()}|${v.a.region}` === cityKey,
@@ -235,10 +238,6 @@ export function searchAirportSuggestions(
     .map((row) => toSuggestion(row.a));
 }
 
-/**
- * Resolve free-text city / IATA to a commercial airport.
- * Rule: same city(+state) best-ranked airport, else nearest in dataset.
- */
 export function resolveAirport(cityInput: string): AirportRef | null {
   const trimmed = cityInput.trim();
   if (!trimmed) return null;
@@ -260,24 +259,19 @@ export function resolveAirport(cityInput: string): AirportRef | null {
   const sameCity = bestInCity(city, region);
   if (sameCity) return toAirportRef(sameCity);
 
-  // Partial city name: prefer startsWith matches' best hub
   const partial = DATASET.airports
     .filter((a) => a.city.toLowerCase().startsWith(city))
     .sort((a, b) => rankOf(b) - rankOf(a));
   if (partial[0]) return toAirportRef(partial[0]);
 
-  // If we have a known airport for a similar municipality via includes
   const includes = DATASET.airports
     .filter((a) => a.city.toLowerCase().includes(city))
     .sort((a, b) => rankOf(b) - rankOf(a));
   if (includes[0]) return toAirportRef(includes[0]);
 
-  // Last resort: if user typed coordinates-like nothing — no nearest without a seed point.
-  // Use a US centroid only when query matches a keyword alias we don't have — skip.
   return null;
 }
 
-/** Expose nearest-hub helper for docs/tests. */
 export function nearestCommercialAirport(
   lat: number,
   lon: number,
@@ -286,10 +280,6 @@ export function nearestCommercialAirport(
   return a ? toAirportRef(a) : null;
 }
 
-/**
- * Resolve with OurAirports table first; if unknown, geocode via Open-Meteo
- * (US only) and pick the nearest commercial airport in the filtered set.
- */
 export async function resolveAirportWithFallback(
   cityInput: string,
 ): Promise<AirportRef | null> {
