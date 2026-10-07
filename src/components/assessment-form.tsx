@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CityAutocomplete } from "@/components/city-autocomplete";
 
 export interface AssessmentFormValues {
   originCity: string;
@@ -49,32 +50,24 @@ export function AssessmentForm({ disabled, onSubmit }: AssessmentFormProps) {
       }}
     >
       <div className="form-grid">
-        <div className="field">
-          <Label htmlFor="origin">Origin city</Label>
-          <Input
-            id="origin"
-            name="origin"
-            autoComplete="off"
-            placeholder="e.g. Chicago"
-            value={originCity}
-            disabled={disabled}
-            onChange={(e) => setOriginCity(e.target.value)}
-            required
-          />
-        </div>
-        <div className="field">
-          <Label htmlFor="destination">Destination city</Label>
-          <Input
-            id="destination"
-            name="destination"
-            autoComplete="off"
-            placeholder="e.g. San Francisco"
-            value={destinationCity}
-            disabled={disabled}
-            onChange={(e) => setDestinationCity(e.target.value)}
-            required
-          />
-        </div>
+        <CityAutocomplete
+          id="origin"
+          label="Origin city"
+          placeholder="e.g. Chicago"
+          value={originCity}
+          disabled={disabled}
+          required
+          onChange={setOriginCity}
+        />
+        <CityAutocomplete
+          id="destination"
+          label="Destination city"
+          placeholder="e.g. San Francisco"
+          value={destinationCity}
+          disabled={disabled}
+          required
+          onChange={setDestinationCity}
+        />
         <div className="field">
           <Label htmlFor="date">Travel date</Label>
           <Input
