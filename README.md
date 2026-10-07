@@ -25,7 +25,7 @@ Open [http://127.0.0.1:43127](http://127.0.0.1:43127).
 - Destination: `San Francisco` (autocomplete suggests SFO)
 - Date: today (or any day within the next 7 days)
 
-Cities resolve to primary hub airports. Typing filters the hub list; IATA codes also work.
+Cities resolve from an OurAirports-derived US commercial set (~1000 airports). Typing filters suggestions (e.g. Wilmington → ILM / ILG / ILN by state). Unknown places geocode then map to the nearest hub. IATA codes also work.
 
 ## Env vars
 

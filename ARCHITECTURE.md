@@ -5,7 +5,7 @@
 **Input:** origin city, destination city, travel date (today → +7 days)  
 **Output:** overall risk, Ops narrative, prioritized risks with evidence IDs, recommended actions, confidence + gaps.
 
-Air travel is primary. Cities map to a small static table of major U.S. hubs with **typed autocomplete** that filters suggestions and selects the primary hub.
+Air travel is primary. City/airport coverage comes from **OurAirports** (US large/medium + scheduled small with IATA, ~1000 airports). Autocomplete filters that set. **Hub rule:** best-ranked airport in the same municipality+state (large > medium > small, scheduled boost); if the place is unknown locally, the assess API geocodes via Open-Meteo and picks the **nearest** commercial airport by haversine.
 
 ## Request flow
 
