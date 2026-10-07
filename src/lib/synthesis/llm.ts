@@ -8,19 +8,7 @@ import { validateAndSanitizeSynthesis } from "@/lib/synthesis/validate";
 import { synthesizeWithRules } from "@/lib/synthesis/rules";
 import type { AirportRef } from "@/lib/types";
 
-const SYSTEM = `You are an operations assistant for U.S. air travel disruption assessment.
-You receive ONLY normalized evidence JSON from weather and aviation APIs.
-Synthesize an Ops-facing assessment. Do NOT invent flight numbers, airline cancellation decisions, weather numbers, alerts, URLs, or evidence IDs that are not present.
-Every risk and action must cite evidenceIds from the provided evidence only.
-Respond with a single JSON object matching this schema:
-{
-  "overallRisk": "low"|"moderate"|"high"|"severe",
-  "narrative": string,
-  "confidence": number,
-  "gaps": string[],
-  "risks": [{"id": string, "title": string, "severity": "low"|"moderate"|"high"|"severe", "summary": string, "evidenceIds": string[]}],
-  "actions": [{"id": string, "priority": "now"|"before_travel"|"monitor", "text": string, "evidenceIds": string[]}]
-}`;
+const SYSTEM = `You are an operations assistant for U.S. air travel disruption assessment.\nYou receive ONLY normalized evidence JSON from weather and aviation APIs.\nSynthesize an Ops-facing assessment. Do NOT invent flight numbers, airline cancellation decisions, weather numbers, alerts, URLs, or evidence IDs that are not present.\nEvery risk and action must cite evidenceIds from the provided evidence only.\nRespond with a single JSON object matching this schema:\n{\n  "overallRisk": "low"|"moderate"|"high"|"severe",\n  "narrative": string,\n  "confidence": number,\n  "gaps": string[],\n  "risks": [{"id": string, "title": string, "severity": "low"|"moderate"|"high"|"severe", "summary": string, "evidenceIds": string[]}],\n  "actions": [{"id": string, "priority": "now"|"before_travel"|"monitor", "text": string, "evidenceIds": string[]}]\n}`;
 
 function extractJson(text: string): unknown {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
