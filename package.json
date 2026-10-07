@@ -6,7 +6,8 @@
     "dev": "next dev --port 43127",
     "build": "next build",
     "start": "next start --port 43127",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:airports": "node scripts/build-us-airports.mjs"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.16",
