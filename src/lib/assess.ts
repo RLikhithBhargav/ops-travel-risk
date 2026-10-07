@@ -1,4 +1,4 @@
-import { resolveAirport } from "@/lib/airports";
+import { resolveAirportWithFallback } from "@/lib/airports";
 import { cacheKey, getCached, setCached } from "@/lib/cache";
 import { fetchAviationWeatherEvidence } from "@/lib/sources/aviationweather";
 import { fetchNwsEvidence } from "@/lib/sources/nws";
@@ -52,13 +52,13 @@ export async function runAssessment(input: {
 
   assertTravelDate(date);
 
-  const origin = resolveAirport(originCity);
+  const origin = await resolveAirportWithFallback(originCity);
   if (!origin) {
     throw new AssessError(
       `Could not resolve origin city "${originCity}" to a known U.S. hub airport.`,
     );
   }
-  const destination = resolveAirport(destinationCity);
+  const destination = await resolveAirportWithFallback(destinationCity);
   if (!destination) {
     throw new AssessError(
       `Could not resolve destination city "${destinationCity}" to a known U.S. hub airport.`,
