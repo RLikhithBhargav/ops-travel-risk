@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
+/* nuKudo brand tokens from nukudo.com (:root HSL → hex) */
 :root {
-  --background: #0f1a22;
-  --foreground: #e8eef2;
-  --muted: rgba(232, 238, 242, 0.08);
-  --muted-foreground: #9aadb8;
-  --border: rgba(232, 238, 242, 0.18);
-  --input: rgba(8, 16, 22, 0.55);
-  --primary: #c4a35a;
-  --primary-foreground: #1a1408;
-  --secondary: rgba(232, 238, 242, 0.12);
-  --secondary-foreground: #e8eef2;
-  --ring: #c4a35a;
-  --risk-low: #5f9e7a;
-  --risk-moderate: #c4a35a;
-  --risk-high: #d0894a;
-  --risk-severe: #c45c4a;
-  --panel: rgba(12, 22, 30, 0.72);
+  --background: #000000;
+  --foreground: #ffffff;
+  --muted: rgba(255, 255, 255, 0.08);
+  --muted-foreground: #a6a6a6;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.06);
+  --primary: #d0011d; /* hsl(352 99% 41%) */
+  --primary-foreground: #ffffff;
+  --primary-hover: #990015; /* hsl(352 99% 30%) */
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --accent: #c1a15c; /* hsl(41 45% 56%) */
+  --accent-foreground: #000000;
+  --ring: #c1a15c;
+  --risk-low: #3d9b6a;
+  --risk-moderate: #c1a15c;
+  --risk-high: #e07a3a;
+  --risk-severe: #d0011d;
+  --panel: rgba(10, 10, 10, 0.82);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
@@ -64,11 +68,11 @@ a {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(8, 14, 20, 0.15) 0%, rgba(8, 14, 20, 0.78) 58%, rgba(8, 14, 20, 0.94) 100%),
-    radial-gradient(ellipse 80% 55% at 70% 20%, rgba(196, 163, 90, 0.22), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 15% 70%, rgba(62, 106, 128, 0.35), transparent 55%),
-    linear-gradient(135deg, #1a2e3a 0%, #0c1620 45%, #162830 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.04'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3C/g%3E%3C/svg%3E");
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.72) 52%, rgba(0, 0, 0, 0.94) 100%),
+    radial-gradient(ellipse 70% 50% at 78% 18%, rgba(208, 1, 29, 0.28), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 12% 72%, rgba(193, 161, 92, 0.16), transparent 55%),
+    linear-gradient(145deg, #0a0a0a 0%, #000000 48%, #120406 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.035'%3E%3Cpath d='M0 80h160M80 0v160'/%3E%3C/g%3E%3C/svg%3E");
   background-size: cover, auto, auto, auto, 160px 160px;
   animation: atmosphere-drift 18s ease-in-out infinite alternate;
 }
@@ -107,7 +111,7 @@ a {
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 0.95;
-  color: #f4efe4;
+  color: #ffffff;
 }
 
 .hero h1 {
@@ -161,6 +165,59 @@ a {
 .submit-btn {
   width: fit-content;
   margin-top: 0.25rem;
+}
+
+.city-autocomplete {
+  position: relative;
+}
+
+.hub-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted-foreground);
+}
+
+.city-suggest-list {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0.25rem 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 16rem;
+  overflow: auto;
+  border: 1px solid var(--border);
+  background: #0a0a0a;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  animation: fade-in 160ms ease both;
+}
+
+.city-suggest-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  font: inherit;
+}
+
+.city-suggest-item:hover,
+.city-suggest-item.active {
+  background: rgba(208, 1, 29, 0.14);
+}
+
+.city-suggest-main {
+  font-size: 0.95rem;
+}
+
+.city-suggest-sub {
+  font-size: 0.78rem;
 }
 
 .loading-panel {
